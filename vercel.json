@@ -5,8 +5,9 @@
       "src": "package.json",
       "use": "@vercel/node",
       "config": {
-        "buildCommand": "NODE_ENV=production npx vite build",
-        "outputDirectory": "dist"
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist",
+        "framework": "vite"
       }
     }
   ],
