@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import MessageList from '../common/MessageList';
 import MessageForm from '../common/MessageForm';
 import { PLACEHOLDER_IMAGE } from '../../utils/constants';
+import { getImageUrl } from '../../utils/helpers';
 
 const MessageCenter = () => {
   const [employees, setEmployees] = useState([]);
@@ -146,6 +147,12 @@ const MessageCenter = () => {
       return messages;
     }
   };
+
+  // Add image error handling function
+  const handleImageError = (e) => {
+    e.target.onerror = null;
+    e.target.src = PLACEHOLDER_IMAGE;
+  };
   
   if (loading && messages.length === 0) {
     return <div className="flex justify-center p-8">Loading messages...</div>;
@@ -202,13 +209,10 @@ const MessageCenter = () => {
               >
                 <div className="flex-shrink-0 h-8 w-8 rounded-full overflow-hidden mr-3">
                   <img
-                    src={employee.profileImage ? `http://localhost:3000${employee.profileImage}` : PLACEHOLDER_IMAGE}
+                    src={employee.profileImage ? getImageUrl(employee.profileImage) : PLACEHOLDER_IMAGE}
                     alt={`${employee.firstName} ${employee.lastName}`}
                     className="h-full w-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = PLACEHOLDER_IMAGE;
-                    }}
+                    onError={handleImageError}
                   />
                 </div>
                 <div className="text-left">

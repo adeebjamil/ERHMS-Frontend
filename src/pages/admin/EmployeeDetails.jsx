@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaUser, FaEnvelope, FaPhone, FaBuilding, FaUserTag, FaCalendarAlt, FaDollarSign } from 'react-icons/fa';
 import api from '../../services/api';
 import { PLACEHOLDER_IMAGE } from '../../utils/constants';
+import { getImageUrl } from '../../utils/helpers';
 
 const EmployeeDetails = () => {
   const { id } = useParams();
@@ -53,7 +54,7 @@ const EmployeeDetails = () => {
           <div className="flex items-center">
             <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white mr-6">
               <img
-                src={employee.profileImage ? `http://localhost:3000${employee.profileImage}` : PLACEHOLDER_IMAGE}
+                src={employee.profileImage ? getImageUrl(employee.profileImage) : PLACEHOLDER_IMAGE}
                 alt={`${employee.firstName} ${employee.lastName}`}
                 className="w-full h-full object-cover"
                 onError={(e) => {

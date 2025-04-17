@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import Modal from '../common/Modal';
 import Pagination from '../common/Pagination';
 import { PLACEHOLDER_IMAGE } from '../../utils/constants';
+import { getImageUrl } from '../../utils/helpers'; // Add this import
 
 const AttendanceList = () => {
   const [attendanceRecords, setAttendanceRecords] = useState([]);
@@ -283,7 +284,7 @@ const AttendanceList = () => {
                         <div className="h-10 w-10 flex-shrink-0 mr-3">
                           <img 
                             className="h-10 w-10 rounded-full object-cover"
-                            src={record.employeeId?.profileImage ? `http://localhost:3000${record.employeeId.profileImage}` : PLACEHOLDER_IMAGE}
+                            src={record.employeeId?.profileImage ? getImageUrl(record.employeeId.profileImage) : PLACEHOLDER_IMAGE}
                             alt={`${record.employeeId?.firstName} ${record.employeeId?.lastName}`}
                             onError={(e) => {
                               e.target.onerror = null;
@@ -364,7 +365,7 @@ const AttendanceList = () => {
                 <div className="h-12 w-12 flex-shrink-0 mr-3 rounded-full overflow-hidden">
                   <img 
                     className="h-12 w-12 object-cover"
-                    src={currentRecord.employeeId?.profileImage ? `http://localhost:3000${currentRecord.employeeId.profileImage}` : PLACEHOLDER_IMAGE}
+                    src={currentRecord.employeeId?.profileImage ? getImageUrl(currentRecord.employeeId.profileImage) : PLACEHOLDER_IMAGE}
                     alt={`${currentRecord.employeeId?.firstName} ${currentRecord.employeeId?.lastName}`}
                     onError={(e) => {
                       e.target.onerror = null;

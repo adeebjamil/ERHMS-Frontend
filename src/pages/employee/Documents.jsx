@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { FaFileUpload, FaFilePdf, FaFileImage, FaTrash, FaCheckCircle, FaTimesCircle, FaHourglassHalf } from 'react-icons/fa';
 import api from '../../services/api';
 import { toast } from 'react-toastify';
+import { getImageUrl } from '../../utils/helpers';
 
 const Documents = () => {
   const [documents, setDocuments] = useState([]);
@@ -134,7 +135,7 @@ const Documents = () => {
               
               <div className="flex">
                 <a
-                  href={`http://localhost:3000${document.filePath}`}
+                  href={getImageUrl(document.filePath)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mr-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"

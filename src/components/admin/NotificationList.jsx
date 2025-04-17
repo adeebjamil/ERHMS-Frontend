@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { FaBell, FaCheck, FaCalendarCheck, FaBriefcase, FaEnvelope, FaUser, FaInfoCircle, FaPassport } from 'react-icons/fa';
 import api from '../../services/api';
 import { PLACEHOLDER_IMAGE } from '../../utils/constants';
+import { getImageUrl } from '../../utils/helpers';
 
 const NotificationList = () => {
   const [notifications, setNotifications] = useState([]);
@@ -115,7 +116,7 @@ const NotificationList = () => {
                   <div className="flex items-center mb-1">
                     <div className="w-6 h-6 mr-2 overflow-hidden rounded-full">
                       <img
-                        src={notification.employeeId.profileImage ? `http://localhost:3000${notification.employeeId.profileImage}` : PLACEHOLDER_IMAGE}
+                        src={notification.employeeId.profileImage ? getImageUrl(notification.employeeId.profileImage) : PLACEHOLDER_IMAGE}
                         alt="Employee"
                         className="w-full h-full object-cover"
                         onError={(e) => {

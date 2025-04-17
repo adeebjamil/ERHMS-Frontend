@@ -4,6 +4,7 @@ import { COMPANY, PLACEHOLDER_IMAGE } from '../../utils/constants';
 import { FaSignOutAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
+import { getImageUrl } from '../../utils/helpers';
 
 const EmployeeNavbar = () => {
   const { logout, currentUser } = useAuth();
@@ -17,7 +18,7 @@ const EmployeeNavbar = () => {
           setLoading(true);
           const { data } = await api.get('/employees/profile');
           if (data.profileImage) {
-            setProfileImage(`http://localhost:3000${data.profileImage}`);
+            setProfileImage(getImageUrl(data.profileImage));
           }
           setLoading(false);
         }

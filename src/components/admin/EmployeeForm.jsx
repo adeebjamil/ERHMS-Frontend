@@ -4,8 +4,9 @@ import Button from '../common/Button';
 import { FaUpload, FaUser } from 'react-icons/fa';
 import api from '../../services/api';
 import { uploadFile } from '../../utils/FileUploadHelper';
+import { getImageUrl } from '../../utils/helpers';
 
-const EmployeeForm = ({ onSubmit, loading, initialData = {}, isEditMode = false }) => {
+const EmployeeForm = ({ onSubmit, loading, initialData = {}, isEditMode = false, onSuccess }) => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -52,7 +53,7 @@ const EmployeeForm = ({ onSubmit, loading, initialData = {}, isEditMode = false 
       
       // Set the profile image preview if it exists
       if (initialData.profileImage) {
-        setPreview(`http://localhost:3000${initialData.profileImage}`);
+        setPreview(getImageUrl(initialData.profileImage));
       }
     }
   }, [initialData]);
@@ -174,7 +175,9 @@ const EmployeeForm = ({ onSubmit, loading, initialData = {}, isEditMode = false 
       } else {
         toast.success(`Employee ${isEditMode ? 'updated' : 'created'} successfully`);
         resetForm();
-        if (onSuccess) onSuccess();
+        if (typeof onSuccess === 'function') {
+          onSuccess();
+        }
       }
     } catch (error) {
       console.error('Form submission error:', error);

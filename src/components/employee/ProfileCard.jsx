@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FaEnvelope, FaPhone, FaBuilding, FaUserTag, FaEdit, FaCheck } from 'react-icons/fa';
 import Card, { CardBody, CardHeader, CardFooter } from '../common/Card';
 import Button from '../common/Button';
+import { getImageUrl } from '../../utils/helpers';
+import { PLACEHOLDER_IMAGE } from '../../utils/constants';
 
 const ProfileCard = ({ profile, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -46,12 +48,25 @@ const ProfileCard = ({ profile, onUpdate }) => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">
-            {profile.firstName} {profile.lastName}
-          </h2>
-          <div className={`px-2 py-1 text-xs font-semibold text-white rounded ${profile.status === 'active' ? 'bg-green-500' : profile.status === 'on leave' ? 'bg-yellow-500' : 'bg-red-500'}`}>
-            {profile.status}
+        <div className="flex items-center">
+          <div className="w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-gray-200">
+            <img
+              src={profile.profileImage ? getImageUrl(profile.profileImage) : PLACEHOLDER_IMAGE}
+              alt={`${profile.firstName} ${profile.lastName}`}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = PLACEHOLDER_IMAGE;
+              }}
+            />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold">
+              {profile.firstName} {profile.lastName}
+            </h2>
+            <div className={`px-2 py-1 text-xs font-semibold text-white rounded ${profile.status === 'active' ? 'bg-green-500' : profile.status === 'on leave' ? 'bg-yellow-500' : 'bg-red-500'}`}>
+              {profile.status}
+            </div>
           </div>
         </div>
       </CardHeader>
