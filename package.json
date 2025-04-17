@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npx vite build",
     "preview": "vite preview",
     "dev:staging": "vite --mode staging",
     "build:staging": "vite build --mode staging",
     "build:production": "vite build --mode production"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "axios": "^1.8.4",
