@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npx vite build",
+    "build": "bash ./build.sh",
     "preview": "vite preview",
     "dev:staging": "vite --mode staging",
     "build:staging": "vite build --mode staging",
