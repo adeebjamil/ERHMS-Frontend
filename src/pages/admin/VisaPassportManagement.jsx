@@ -31,25 +31,31 @@ const VisaPassportManagement = () => {
   const fetchDocuments = async () => {
     try {
       setLoading(true);
-
-      const params = new URLSearchParams();
-      params.append('page', currentPage);
-      params.append('limit', 10);
-
-      if (filter !== 'all') {
-        params.append('expiryStatus', filter);
+      const response = await api.get('/admin/travel-documents', {
+        params: {
+          filter,
+          page: currentPage,
+          search: searchTerm
+        }
+      });
+      
+      // Filter out documents with missing employee data
+      const validDocuments = response.data.documents.filter(doc => 
+        doc.employeeId && typeof doc.employeeId === 'object' && doc.employeeId._id
+      );
+      
+      // Log how many were filtered out for debugging
+      const filtered = response.data.documents.length - validDocuments.length;
+      if (filtered > 0) {
+        console.log(`Filtered out ${filtered} orphaned documents`);
       }
-
-      if (searchTerm) {
-        params.append('search', searchTerm);
-      }
-
-      const { data } = await api.get(`/admin/travel-documents?${params.toString()}`);
-      setDocuments(data.documents);
-      setTotalPages(data.pagination.pages);
+      
+      setDocuments(validDocuments);
+      setTotalPages(response.data.totalPages);
+      
     } catch (error) {
       console.error('Error fetching documents:', error);
-      toast.error('Failed to fetch travel documents');
+      toast.error('Failed to load travel documents');
     } finally {
       setLoading(false);
     }
@@ -297,7 +303,7 @@ const VisaPassportManagement = () => {
                           <div className="flex-shrink-0 h-14 w-14">
                             <img
                               className="h-14 w-14 rounded-full object-cover"
-                              src={document.employeeId.profileImage ?
+                              src={document.employeeId?.profileImage ?
                                 `${import.meta.env.VITE_API_URL.replace('/api', '')}${document.employeeId.profileImage}`
                                 : "/default-avatar.png"
                               }
@@ -307,10 +313,10 @@ const VisaPassportManagement = () => {
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {document.employeeId.firstName} {document.employeeId.lastName}
+                              {document.employeeId?.firstName || 'N/A'} {document.employeeId?.lastName || ''}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {document.employeeId.email}
+                              {document.employeeId?.email || 'No email available'}
                             </div>
                           </div>
                         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { FaUsers, FaUserPlus, FaCalendarCheck, FaBriefcase, FaEnvelope, FaBell, FaFileAlt, FaSignOutAlt, FaPassport, FaCog } from 'react-icons/fa';
 import { COMPANY } from '../../utils/constants';
 import { useAuth } from '../../contexts/AuthContext';
@@ -8,7 +8,18 @@ import api from '../../services/api';
 const AdminSidebar = () => {
   const [unreadNotifications, setUnreadNotifications] = useState(0);
   const [expiringDocuments, setExpiringDocuments] = useState(0);
+  const [viewedExpiringDocs, setViewedExpiringDocs] = useState(false);
   const { currentUser, logout } = useAuth();
+  const location = useLocation();
+  
+  // Check if user is on the visa-passport page
+  useEffect(() => {
+    if (location.pathname === '/admin/visa-passport' && expiringDocuments > 0) {
+      // Mark notifications as viewed
+      localStorage.setItem('lastViewedExpiringDocs', Date.now().toString());
+      setViewedExpiringDocs(true);
+    }
+  }, [location.pathname, expiringDocuments]);
 
   useEffect(() => {
     fetchUnreadCount();
@@ -34,7 +45,27 @@ const AdminSidebar = () => {
   const fetchExpiringDocumentsCount = async () => {
     try {
       const { data } = await api.get('/admin/travel-documents/expiring-count');
-      setExpiringDocuments(data.count || 0);
+      const count = data.count || 0;
+      setExpiringDocuments(count);
+      
+      // Check if this count has been viewed before
+      const lastViewed = localStorage.getItem('lastViewedExpiringDocs');
+      const lastViewedCount = localStorage.getItem('lastExpiringDocsCount');
+      
+      if (lastViewed && lastViewedCount) {
+        // If the count is the same as last viewed, consider it viewed
+        if (parseInt(lastViewedCount) === count) {
+          setViewedExpiringDocs(true);
+        } else {
+          // If count changed, need to view again
+          setViewedExpiringDocs(false);
+          localStorage.setItem('lastExpiringDocsCount', count.toString());
+        }
+      } else {
+        // First time seeing documents
+        localStorage.setItem('lastExpiringDocsCount', count.toString());
+        setViewedExpiringDocs(false);
+      }
     } catch (error) {
       console.error('Failed to fetch expiring documents count', error);
     }
@@ -122,13 +153,13 @@ const AdminSidebar = () => {
           <FaFileAlt className="mr-2" /> Documents
         </NavLink>
         
-        {/* Add new Visa/Passport link here */}
+        {/* Modified Visa/Passport link */}
         <NavLink 
           to="/admin/visa-passport" 
           className={({isActive}) => `flex items-center px-4 py-2 rounded relative transition-colors ${isActive ? 'bg-cyan-600' : 'hover:bg-cyan-600'}`}
         >
           <FaPassport className="mr-2" /> Visa/Passport
-          {expiringDocuments > 0 && (
+          {expiringDocuments > 0 && !viewedExpiringDocs && (
             <span className="absolute top-0 right-0 transform translate-x-1 -translate-y-1 bg-red-500 text-xs rounded-full h-5 w-5 flex items-center justify-center">
               {expiringDocuments}
             </span>
