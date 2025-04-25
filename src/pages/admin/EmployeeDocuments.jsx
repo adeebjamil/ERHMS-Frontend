@@ -202,7 +202,7 @@ const EmployeeDocuments = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex space-x-2">
                         <a
-                          href={`http://localhost:3000${document.filePath}`}
+                          href={`https://ehrms-backend.onrender.com${document.filePath}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           download
